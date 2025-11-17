@@ -26,7 +26,7 @@
 #
 #
 # Changes from Qualcomm Innovation Center are provided under the following license:
-# Copyright (c) 2022-2024 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted (subject to the limitations in the
@@ -67,7 +67,8 @@ import /vendor/etc/ueventd.qcom.userdebug.rc
 # Below macro will be read by uevent and path will
 # be added to search path for firmware loading
 # ifndef OPLUS_FEATURE_WIFI_BDF
-# lixiong2@CONNECTIVITY.WIFI.HARDWARE.BDF.7516716, 2024.7.1, modify for 8750
+# fangzhijun@CONNECTIVITY.WIFI.HARDWARE.BDF.5719240 , 2023/06/13,
+# Modify for: multi projects using different bdf, adding persist into firmware_directories
 # firmware_directories /vendor/firmware_mnt/image/
 # else /* OPLUS_FEATURE_WIFI_BDF */
 firmware_directories /mnt/vendor/persist/copy/ /odm/etc/wifi/ /mnt/vendor/persist/ /vendor/firmware_mnt/image/
@@ -132,7 +133,6 @@ subsystem mem_buf_vm
 /dev/smd3                 0660   bluetooth  bluetooth
 /dev/btpower              0660   bluetooth  system
 /dev/btfmslim             0660   bluetooth  system
-/dev/btfmswr              0660   bluetooth  system
 /dev/bt_cp_ctrl           0660   bluetooth  system
 /dev/btfmcodec_dev        0660   bluetooth  system
 
@@ -193,8 +193,6 @@ subsystem mem_buf_vm
 /dev/mhi_*_pipe_32        0640   radio      radio
 /dev/at_usb0              0640   radio      radio
 /dev/at_mdm0              0640   radio      radio
-/dev/ims_dc_sub1          0640   radio      radio
-/dev/ims_dc_sub2          0640   radio      radio
 /dev/video*               0660   system     camera
 /dev/cvp*                 0660   system     camera
 /dev/media*               0660   system     camera
@@ -234,9 +232,6 @@ subsystem mem_buf_vm
 /dev/system_health_monitor 0644  radio      system
 /dev/mdss_rotator         0664   system     system
 /dev/spec_sync            0660   system     system
-
-#Chengming@Camera,2024/01/19,add for camera_extension.ko
-/dev/camera_extension_monitor 0660 cameraserver   camera
 
 #QDSS
 /dev/byte-cntr            0660   system    oem_2902
@@ -450,7 +445,6 @@ subsystem mem_buf_vm
 /dev/block/platform/soc/7c4000.sdhci/by-name/frp        0600   system     system
 /dev/block/platform/soc/4744000.sdhci/by-name/frp       0600   system     system
 /dev/block/platform/soc/4804000.ufshc/by-name/frp       0600   system     system
-/dev/block/platform/soc/1bf8000.pcie/by-name/frp        0600   system     system
 
 # This is temporary while using SD card for initial bring-up
 /dev/block/platform/soc/8804000.sdhci/by-name/frp       0600   system     system
@@ -465,22 +459,36 @@ subsystem mem_buf_vm
 /sys/class/leds/red      repeat       0640    system    system
 /sys/class/leds/red      hw_pattern   0640    system    system
 /sys/class/leds/red      trigger      0640    system    system
+/sys/class/leds/red      brightness   0664    system    system
+/sys/class/leds/red      tr1          0664    system    system
+/sys/class/leds/red      tf1          0664    system    system
+/sys/class/leds/red      toff         0664    system    system
+/sys/class/leds/red      ton          0664    system    system
+/sys/class/leds/red      support      0664    system    system
 /sys/class/leds/green    delay_on     0640    system    system
 /sys/class/leds/green    delay_off    0640    system    system
 /sys/class/leds/green    breath       0640    system    system
 /sys/class/leds/green    trigger      0640    system    system
 /sys/class/leds/green    repeat       0640    system    system
 /sys/class/leds/green    hw_pattern   0640    system    system
+/sys/class/leds/green    brightness   0664    system    system
+/sys/class/leds/green    tr1          0664    system    system
+/sys/class/leds/green    tf1          0664    system    system
+/sys/class/leds/green    toff         0664    system    system
+/sys/class/leds/green    ton          0664    system    system
+/sys/class/leds/green    support      0664    system    system
 /sys/class/leds/blue     delay_on     0640    system    system
 /sys/class/leds/blue     delay_off    0640    system    system
 /sys/class/leds/blue     breath       0640    system    system
 /sys/class/leds/blue     trigger      0640    system    system
 /sys/class/leds/blue     repeat       0640    system    system
 /sys/class/leds/blue     hw_pattern   0640    system    system
-
-#Haptics class devices
-/sys/class/qcom-haptics    visense_enabled     0400    system    system
-/sys/class/qcom-haptics    primitive_duration  0600    system    system
+/sys/class/leds/blue     brightness   0664    system    system
+/sys/class/leds/blue     tr1          0664    system    system
+/sys/class/leds/blue     tf1          0664    system    system
+/sys/class/leds/blue     toff         0664    system    system
+/sys/class/leds/blue     ton          0664    system    system
+/sys/class/leds/blue     support      0664    system    system
 
 # NPU device
 /dev/msm_npu             0644   system     system
@@ -508,7 +516,9 @@ subsystem mem_buf_vm
 /sys/bus/usb/devices/usb*   authorized                 0660  system  usb
 
 #USB mode setting
+/sys/bus/platform/devices/a400000.ssusb    mode        0660  system  usb
 /sys/bus/platform/devices/a600000.ssusb    mode        0660  system  usb
+/sys/bus/platform/devices/4e00000.ssusb    mode        0660  system  usb
 
 #Memory Offline
 /sys/devices/system/memory/memory* state    0660 system system
@@ -618,11 +628,8 @@ subsystem mem_buf_vm
 #Virtualization Attributes
 /dev/gunyah                 0666   root     root
 
+# Tango 32-bit kernel support
+/dev/tango32                0666   system     system
+
 # Q2SPI UWB device
 /dev/q2spiuwb    0660    uwb    uwb
-
-# RemoteProc state
-/sys/class/remoteproc/remoteproc*   state    0660    root  system
-
-# IPA Events
-/dev/ipa_events         0660   radio      radio

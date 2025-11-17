@@ -16,7 +16,7 @@ BUILD_BROKEN_PLUGIN_VALIDATION      := soong-libaosprecovery_defaults soong-libg
 TARGET_ARCH                 := arm64
 TARGET_ARCH_VARIANT         := armv8-a
 TARGET_CPU_ABI              := arm64-v8a
-TARGET_CPU_VARIANT          := oryon
+TARGET_CPU_VARIANT          := kryo
 
 # A/B
 AB_OTA_PARTITIONS := \
@@ -49,14 +49,12 @@ AB_OTA_PARTITIONS += \
     my_stock
 
 # Bootloader
-PRODUCT_PLATFORM                := sun
-TARGET_BOOTLOADER_BOARD_NAME    := sun
+PRODUCT_PLATFORM                := pineapple
+TARGET_BOOTLOADER_BOARD_NAME    := pineapple
 
 # Crypto
 BOARD_USES_METADATA_PARTITION   := true
 TW_INCLUDE_CRYPTO               := true
-TW_INCLUDE_OMAPI                := true
-TW_OMAPI_UUID                   := 636F6D2E6E78702E7365637572697479 
 
 # Debug
 TARGET_USES_LOGD                := true
@@ -69,10 +67,6 @@ RECOVERY_BINARY_SOURCE_FILES    += $(TARGET_OUT_EXECUTABLES)/strace
 # File systems
 TARGET_USERIMAGES_USE_F2FS := true
 TW_USE_DMCTL               := true
-
-# Init
-TARGET_INIT_VENDOR_LIB          := //$(DEVICE_PATH):libinit_oplus_sm87xx
-TARGET_RECOVERY_DEVICE_MODULES  := libinit_oplus_sm87xx
 
 # Kernel
 BOARD_KERNEL_IMAGE_NAME     := Image
@@ -87,10 +81,10 @@ BOARD_RAMDISK_USE_LZ4       := true
 BOARD_PROPERTY_OVERRIDES_SPLIT_ENABLED  := true
 BOARD_RECOVERYIMAGE_PARTITION_SIZE      := 0x6400000
 
-BOARD_SUPER_PARTITION_SIZE                  := 15569256448
+BOARD_SUPER_PARTITION_SIZE                  := 14578294784
 BOARD_SUPER_PARTITION_GROUPS                := qti_dynamic_partitions
-BOARD_QTI_DYNAMIC_PARTITIONS_SIZE           := 15565062144
-BOARD_QTI_DYNAMIC_PARTITIONS_PARTITION_LIST := system system_ext product vendor vendor_dlkm odm
+BOARD_QTI_DYNAMIC_PARTITIONS_SIZE           := 14574100480
+BOARD_QTI_DYNAMIC_PARTITIONS_PARTITION_LIST := system system_dlkm system_ext product vendor vendor_dlkm odm
 BOARD_QTI_DYNAMIC_PARTITIONS_PARTITION_LIST += my_bigball my_carrier my_company my_engineering my_heytap my_manifest my_preload my_product my_region my_stock
 
 BOARD_ODMIMAGE_FILE_SYSTEM_TYPE := ext4
@@ -98,8 +92,8 @@ TARGET_COPY_OUT_ODM             := odm
 TARGET_COPY_OUT_VENDOR          := vendor
 
 # Platform
-TARGET_BOARD_PLATFORM   := sm87xx
-QCOM_BOARD_PLATFORMS    += sm87xx
+TARGET_BOARD_PLATFORM   := sm86xx
+QCOM_BOARD_PLATFORMS    += sm86xx
 
 # Recovery
 BOARD_EXCLUDE_KERNEL_FROM_RECOVERY_IMAGE    := true
@@ -115,9 +109,9 @@ TW_USE_TOOLBOX                := true
 
 # TWRP display
 TW_BRIGHTNESS_PATH      := /sys/class/backlight/panel0-backlight/brightness
-TW_DEFAULT_BRIGHTNESS   := 1000
+TW_DEFAULT_BRIGHTNESS   := 2048
 TW_FRAMERATE            := 120
-TW_MAX_BRIGHTNESS       := 2047
+TW_MAX_BRIGHTNESS       := 4095
 TW_SCREEN_BLANK_ON_BOOT := true
 TW_THEME                := portrait_hdpi
 
@@ -135,7 +129,7 @@ PLATFORM_VERSION                := 99.87.36
 PLATFORM_VERSION_LAST_STABLE    := $(PLATFORM_VERSION)
 PLATFORM_SECURITY_PATCH         := 2099-12-31
 VENDOR_SECURITY_PATCH           := $(PLATFORM_SECURITY_PATCH)
-TW_DEVICE_VERSION               := OPLUS-SM87XX
+TW_DEVICE_VERSION               := OPLUS-SM86XX
 
 # Verified Boot
 BOARD_AVB_ENABLE := true
@@ -145,11 +139,11 @@ TW_SUPPORT_INPUT_AIDL_HAPTICS := true
 
 # Other TWRP Configurations
 TARGET_RECOVERY_QCOM_RTC_FIX            := true
-TW_CUSTOM_CPU_TEMP_PATH                 := "/sys/class/thermal/thermal_zone45/temp" # CPU-0-0-0
+TW_CUSTOM_CPU_TEMP_PATH                 := "/sys/class/thermal/thermal_zone48/temp"
 TW_EXCLUDE_APEX                         := true
 TW_EXCLUDE_DEFAULT_USB_INIT             := true
 TW_EXTRA_LANGUAGES                      := true
-TW_LOAD_VENDOR_MODULES                  := "adsp_loader_dlkm.ko oplus_chg_v2.ko stm_st54se_gpio.ko nxp-nci.ko"
+TW_LOAD_VENDOR_MODULES                  := "adsp_loader_dlkm.ko goodix_core.ko oplus_chg_v2.ko stm_st54se_gpio.ko nxp-nci.ko"
 TW_LOAD_VENDOR_MODULES_EXCLUDE_GKI      := true
 TW_NO_SCREEN_BLANK                      := true
 TW_USE_SERIALNO_PROPERTY_FOR_DEVICE_ID  := true

@@ -29,7 +29,7 @@ on early-fs
     write /proc/sys/walt/sched_lib_name "recovery,Updater,updater,update_engine_sideload"
     write /proc/sys/walt/sched_lib_mask_force 255
 
-service post-boot-script /system/bin/sh -c /vendor/bin/init.kernel.post_boot-sun_default_6_2.sh
+service post-boot-script /system/bin/sh -c /vendor/bin/init.kernel.post_boot-pineapple_default_2_3_2_1.sh
     user root
     group root
     oneshot
@@ -38,6 +38,11 @@ service post-boot-script /system/bin/sh -c /vendor/bin/init.kernel.post_boot-sun
 on init
     setprop sys.usb.configfs 1
     setprop prepdecrypt.setpatch true
+    start vendor.boot-qti
+    start vendor.gatekeeper_default
+    start vendor.secure_element
+    start vendor.weaver_nxp
+    start vendor.se_omapi
 
 on property:ro.boot.usbcontroller=*
     setprop sys.usb.controller ${ro.boot.usbcontroller}
@@ -49,6 +54,18 @@ on fs
     wait /dev/block/platform/soc/${ro.boot.bootdevice}
     symlink /dev/block/platform/soc/${ro.boot.bootdevice} /dev/block/bootdevice
     write /proc/sys/kernel/firmware_config/force_sysfs_fallback 1
+    chmod 0660 /dev/qseecom
+    chown system drmrpc /dev/qseecom
+    chmod 0664 /dev/ion
+    chown system system /dev/ion
+    mkdir /mnt/vendor 0775 shell system
+    mkdir /mnt/vendor/persist 0775 shell system
+    mkdir /tmp/persist 0775 shell system
+    mount none /tmp/persist /mnt/vendor/persist bind rec
+    install_keyring
+
+on post-fs
+    start variant-script
 
 on property:twrp.modules.loaded=true
     # Mount firmware
@@ -59,14 +76,12 @@ on property:twrp.modules.loaded=true
     write /sys/kernel/boot_adsp/ssr 1
     wait /sys/class/power_supply/battery
     start vendor.health-default
-    start vendor.boot-qti
     start vendor.oplus.vibrator
-    start vendor.gatekeeper_default
     umount /firmware
 
 on property:ro.crypto.state=encrypted && property:ro.boot.dynamic_partitions=true
     start prepdecrypt.vendor
 
-on property:vendor.sys.listeners.registered=true
+on property:servicemanager.ready=true
     setprop sys.boot_completed 1
     start vendor.ssgtzd

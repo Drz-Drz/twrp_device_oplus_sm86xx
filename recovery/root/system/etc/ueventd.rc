@@ -14,6 +14,7 @@ firmware_directories /etc/firmware/ /odm/firmware/ /data/vendor/firmware/update/
 # endif /* OPLUS_FEATURE_WIFI_BDF */
 
 uevent_socket_rcvbuf_size 16M
+parallel_restorecon enabled
 
 subsystem graphics
     devname uevent_devpath
