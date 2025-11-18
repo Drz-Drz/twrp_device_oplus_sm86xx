@@ -73,7 +73,6 @@ on property:twrp.modules.loaded=true
     write /sys/kernel/boot_adsp/ssr 1
     wait /sys/class/power_supply/battery
     start vendor.health-default
-    umount /firmware
     start variant-script
 
 on property:servicemanager.ready=true
@@ -82,9 +81,8 @@ on property:servicemanager.ready=true
 
 on property:twrp.variant.files_copied=1
     start prepdecrypt.vendor
-    umount /firmware
     umount /vendor
-    mount vfat /dev/block/bootdevice/by-name/modem${ro.boot.slot_suffix} /vendor/firmware_mnt ro
+    symlink /firmware /vendor/firmware_mnt
     start vendor.oplus.vibrator
     start vendor.secure_element
     start vendor.weaver_nxp
