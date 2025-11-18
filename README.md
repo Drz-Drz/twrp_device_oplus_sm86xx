@@ -3,6 +3,7 @@
 ## Supported devices
 - OnePlus Ace 5 / 13R(CN, GL, IN)
 - OnePlus Ace 3 Pro(CN)
+- OnePlus Ace 3 V / Nord 4(CN, GL, IN)
 
 ## Build it yourself?
 
