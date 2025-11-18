@@ -1,6 +1,0 @@
-service vendor.variant-copy /vendor/bin/variant-copy.sh
-    user root
-    group root
-    oneshot
-    disabled
-    seclabel u:r:recovery:s0

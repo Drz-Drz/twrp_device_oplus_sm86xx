@@ -42,7 +42,7 @@ set_oneplus_common() {
     resetprop ro.product.vendor.model "$product_name"
     resetprop ro.product.odm.model "$product_name"
     resetprop ro.boot.hardware.revision "$region"
-    log "Variant $variant ($device_code) properties all set."
+    log "Variant $usb_name ($product_name) properties all set."
 }
 
 case "$variant" in
@@ -86,5 +86,29 @@ case "$variant" in
         log "Unknown variant: $variant"
         ;;
 esac
+
+device="$(getprop ro.product.device)"
+
+case "$device" in
+    "OP5CFBL1")
+        # OnePlus ACE 3v (audi)
+        cp -rf /vendor/variant/audi/vendor/* /vendor
+        ;;
+
+    "OP5E93L1")
+        # OnePlus NORD 4 (audi)
+        cp -rf /vendor/variant/audi/vendor/* /vendor
+        ;;
+
+    *)
+        # No need to copy files device
+        device="$(cat /config/usb_gadget/g1/strings/0x409/product)"
+        log "No need to copy files for variant: $device"
+        ;;
+esac
+
+log "twrp.variant.files_copied"
+
+resetprop twrp.variant.files_copied "1"
 
 exit 0
